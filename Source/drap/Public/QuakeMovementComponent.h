@@ -57,7 +57,7 @@ private:
 	FVector PreviousVelocity;
 
 	FVector GetRootVelocity() const;
-	void SetRootVelocity(const FVector& velocity) const;
+	void SetRootVelocity(const FVector& velocity);
 
 	FVector Accelerate(float accelerationFactor, float maxVelocity, const float& deltaTime);
 	FVector MoveGround(const float& deltaTime);

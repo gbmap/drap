@@ -32,6 +32,7 @@ void UQuakeMovementComponent::Jump()
 	FVector velocity = GetRootVelocity();
 	velocity.Z = JumpImpulse;
 	SetRootVelocity(velocity);
+	// CapsuleComponent->AddImpulse(FVector(0.f, 0.f, JumpImpulse), NAME_None, true);
 }
 
 FVector UQuakeMovementComponent::GetRootVelocity() const
@@ -59,8 +60,15 @@ void UQuakeMovementComponent::TickComponent(
 	bool isOnGround = IsOnGround();
 
 	FVector velocity = isOnGround ? MoveGround(DeltaTime) : MoveAir(DeltaTime);
-	SetRootVelocity(FVector(velocity.X, velocity.Y, PreviousVelocity.Z));
-	PreviousVelocity = GetRootVelocity();
+	velocity.Z = PreviousVelocity.Z;
+	if (!isOnGround)
+		velocity.Z += GetWorld()->GetGravityZ() * DeltaTime;
+
+
+	SetRootVelocity(FVector(velocity.X, velocity.Y, velocity.Z));
+
+	// FVector acceleration = velocity - PreviousVelocity;
+	// SetRootVelocity(FVector(velocity.X, velocity.Y, 0.f));
 }
 
 /**
@@ -120,9 +128,11 @@ FVector UQuakeMovementComponent::Accelerate(
 	return PreviousVelocity + TargetDirection * accelerationSpeed;
 }
 
-void UQuakeMovementComponent::SetRootVelocity(const FVector& vector) const
+void UQuakeMovementComponent::SetRootVelocity(const FVector& vector)
 {
 	CapsuleComponent->SetPhysicsLinearVelocity(vector, false);
+	PreviousVelocity = GetRootVelocity();
+	// CapsuleComponent->AddForce(vector, NAME_None, true);
 }
 
 
