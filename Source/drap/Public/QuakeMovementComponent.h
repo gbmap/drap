@@ -47,7 +47,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetTargetDirection(FVector input);
+	void SetTargetDirection(FVector forward, FVector right, FVector input);
 	void Jump();
 
 	bool IsOnGround() const;

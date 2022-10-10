@@ -17,18 +17,22 @@ UQuakeMovementComponent::UQuakeMovementComponent()
 	GroundMaxSpeed = 20000.0f;
 	AirAcceleration = 20000.0f;
 	AirMaxSpeed = 50000.0f;
-	JumpImpulse = 10000.0f;
+	JumpImpulse = 100.0f;
 }
 
-void UQuakeMovementComponent::SetTargetDirection(FVector input)
-{
+void UQuakeMovementComponent::SetTargetDirection(
+	FVector forward, FVector right, FVector input
+) {
 	AActor* owner = GetOwner();
-	TargetDirection = owner->GetActorForwardVector() * input.Y 
-					+ owner->GetActorRightVector() * input.X;
+	TargetDirection = forward * input.Y 
+					+ right * input.X;
 }
 
 void UQuakeMovementComponent::Jump()
 {
+	if (!IsOnGround())
+		return;
+
 	FVector velocity = GetRootVelocity();
 	velocity.Z = JumpImpulse;
 	SetRootVelocity(velocity);

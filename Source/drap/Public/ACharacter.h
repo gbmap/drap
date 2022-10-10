@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "QuakeMovementComponent.h" 
+#include "HealthComponent.h"
+#include "GunComponent.h"
 
 #include "ACharacter.generated.h"
 
@@ -39,11 +41,15 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UCapsuleComponent* Capsule;
 
+	UPROPERTY()
+	UCapsuleComponent* Body;
+
 	UPROPERTY(EditAnywhere, Category="Components")
 	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, Category="Components")
 	UQuakeMovementComponent* Movement;
+	
 
 	// =============== MOVEMENT
 
@@ -56,6 +62,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Debug")
 	bool LogInfoOnScreen;
 
+	// =============== HEALTH ===============
+
+	UPROPERTY(EditAnywhere, Category="Components")
+	UHealthComponent* Health;
+
+	UPROPERTY(EditAnywhere, Category="Gun")
+	UGunComponent* Gun;
+
 private:
 	FVector m_Input;
 	FVector m_LookInput;
@@ -63,15 +77,16 @@ private:
 	FVector m_Velocity;
 	FVector m_PreviousVelocity;
 
-
 	void SetHorizontalInput(float value);
 	void SetVerticalInput(float value);
 	void SetVerticalLookInput(float value);
 	void SetHorizontalLookInput(float value);
+	void LockCapsuleRotation();
 
 	void SetLookInput(USceneComponent* pSceneComponent, FVector value);
 
 	void Jump();
+	void Fire();
 
 	// DEBUG STUFF
 	void LogInfo();
